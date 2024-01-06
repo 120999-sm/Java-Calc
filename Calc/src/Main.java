@@ -13,85 +13,50 @@ class Main extends Roman {
         else if (chars.length <= 1) throw new Exception("Строка не является математической операцией");
 
         for (int e = 0; e < errRomanBox.length; e++) {
-            if (errRomanBox[e].equals(chars[0])){
+            if (errRomanBox[e].equals(chars[0]) || errRomanBox[e].equals(chars[2])){
                 throw new Exception("В римской системе исчесления отсутствуют отрицательные числа");
             }
         }
 
-        for (int e = 0; e < errRomanBox.length; e++) {
-            if (errRomanBox[e].equals(chars[2])){
-                throw new Exception("В римской системе исчесления отсутствуют отрицательные числа");
+        for (int i = 0 ; i < romanBox.length; i++){
+            if (romanBox[i].equals(chars[0])) {
+                num1 = i;
+                one = true;
+            }
+            if (romanBox[i].equals(chars[2])) {
+                num2 = i;
+                two = true;
             }
         }
 
-        for (int a = 0; a < romanBox.length; a++) {
-            if (romanBox[a].equals(chars[0])) one = true;
-        }
-
-        for (int a = 0; a < romanBox.length; a++) {
-            if (romanBox[a].equals(chars[2])) two = true;
-        }
-
-        if (one == true && two == true){
-            for (int i = 0 ; i < romanBox.length; i++){
-
-                if (romanBox[i].equals(chars[0])){
-                    num1 = i;
-                    break;
-                }
-            }
-
-            for (int h = 0 ; h < romanBox.length; h++){
-
-                if (romanBox[h].equals(chars[2])){
-                    num2 = h;
-                    break;
-                }
-            }
-            if (num1 > 10 || num1 < 0){
-                throw new Exception("Значения на вход должны быть  от 1 до 10 или от I до X ");
-            }
-            if (num2 > 10 || num2 < 0){
-                throw new Exception("Значения на вход должны быть  от 1 до 10 или от I до X ");
-            }
-
-            if (chars[1].equals("-")) {
-                result = String.valueOf(num1 - num2);
-                if (num1<num2){
-                    throw new Exception("В римской системе исчесления отсутствуют отрицательные числа");
-                }
-            }else if (chars[1].equals("*")) {
-                result = String.valueOf(num1 * num2);
-            }else if (chars[1].equals("+")) {
-                result = String.valueOf(num1 + num2);
-            }else if (chars[1].equals("/")) {
-                result = String.valueOf(num1 / num2);
-            }else throw new Exception("Неподдерживаемая математическая операция. Пример возможных операций: +,-,/,* ");
-
-            String romanBox1 = romanBox[Integer.parseInt(result)];
-            return romanBox1;
-
-        }else if (one == true && two == false) {
-            throw new Exception("Используются одновременно разные системы счисления");
-        }else if (one == false && two == true) {
-            throw new Exception("Используются одновременно разные системы счисления");
-        }else
+        if (!one && !two) {
             num1 = Integer.parseInt(chars[0]);
-        num2 = Integer.parseInt(chars[2]);
-
-        if (0 > num1 || num1 > 10){
-            throw new Exception("Значения на вход должны быть  от 1 до 10 или от I до X ");
-        }
-        if (0 > num2 || num2 > 10){
-            throw new Exception("Значения на вход должны быть  от 1 до 10 или от I до X ");
+            num2 = Integer.parseInt(chars[2]);
         }
 
-        if (chars[1].equals("/")) result = String.valueOf(num1 / num2);
-        else if (chars[1].equals("*")) result = String.valueOf(num1 * num2);
+        if ((num1 > 10 || num1 < 0) || (num2 > 10 || num2 < 0)) {
+            throw new Exception("Значения на вход должны быть  от 1 до 10 или от I до X ");
+        }
+        if ((one == true && two == false) || (one == false && two == true)) {
+            throw new Exception("Используются одновременно разные системы счисления");
+        }
+        if ((0 > num1 || num1 > 10) || ((0 > num2 || num2 > 10))) {
+            throw new Exception("Значения на вход должны быть  от 1 до 10 или от I до X ");
+        }
+
+        if (chars[1].equals("-")) {
+            if (one && two && num1 < num2) {
+                throw new Exception("В римской системе исчесления отсутствуют отрицательные числа");
+            }
+            result = String.valueOf(num1 - num2);
+        }else if (chars[1].equals("*")) result = String.valueOf(num1 * num2);
         else if (chars[1].equals("+")) result = String.valueOf(num1 + num2);
-        else if (chars[1].equals("-")) result = String.valueOf(num1 - num2);
+        else if (chars[1].equals("/")) result = String.valueOf(num1 / num2);
         else throw new Exception("Неподдерживаемая математическая операция. Пример возможных операций: +,-,/,* ");
-        return result;
+
+        if (one == true && two == true) {
+            return romanBox[Integer.parseInt(result)];
+        } else return result;
     }
 
     public static void main(String[] args) throws Exception {
@@ -102,5 +67,4 @@ class Main extends Roman {
 
         System.out.println(calc(input));
     }
-
 }
